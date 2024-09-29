@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bluszits Inversores</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Roboto', sans-serif;
+            background: #1a1a1a;
+            color: #fff;
+        }
+
+        nav {
+            background-color: #2b2b2b;
+            padding: 5px;
+        }
+
+        .nav-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        nav .logo img {
+            height: 200px; /* Ajusta la altura al 30% más grande */
+            
+        }
+
+        nav ul {
+            list-style: none;
+            display: flex;
+            gap: 20px;
+        }
+
+        nav ul li a {
+            color: #fff;
+            text-decoration: none;
+            font-size: 1.2rem;
+        }
+
+        header {
+            text-align: center;
+            padding: 100px 20px;
+            background: url('/Imagenes.png/Portada\ de\ facebook\ sobre\ black\ friday\ abstracto\ verde\ y\ negro.jpg') no-repeat center center/cover;
+            background-attachment: fixed;
+            color: #1a1a1a;
+        }
+
+        .header-container h1 {
+            font-size: 3rem;
+            color: #e1fa00;
+            text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.973);
+        }
+
+        .header-container p {
+            font-size: 1.5rem;
+            margin: 20px 0;
+            color: #eeff00;
+        }
+
+        .gamer-btn {
+            padding: 15px 30px;
+            background-color: #ffffff;
+            color: #000000;
+            font-size: 1.2rem;
+            border: none;
+            cursor: pointer;
+            margin-top: 20px;
+            transition: background-color 0.3s;
+            border-radius: 5px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        }
+
+        .gamer-btn:hover {
+            background-color: #04c023;
+        }
+
+        #form-container {
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 30px;
+            background-color: #2b2b2b;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
+        }
+
+        #form-container h2 {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        form label {
+            display: block;
+            margin: 15px 0 5px;
+        }
+
+        form input {
+            width: 100%;
+            padding: 10px;
+            font-size: 1rem;
+            border: 2px solid #ff416c;
+            border-radius: 5px;
+            background-color: #1a1a1a;
+            color: #fff;
+        }
+
+        form input:focus {
+            outline: none;
+            border-color: #ff4b2b;
+        }
+
+        .step {
+            display: none;
+        }
+
+        .step.active {
+            display: block;
+        }
+
+        footer {
+            text-align: center;
+            padding: 20px;
+            background-color: #2b2b2b;
+            color: #fff;
+        }
+
+        footer ul {
+            list-style: none;
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+        }
+
+        footer ul li a {
+            color: #fff;
+            text-decoration: none;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .gamepass-option {
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <div class="nav-container">
+            <a href="/index.html" class="logo">
+                <img src="/Imagenes.png/Logo.bluszits-verde-oscuro.png" alt="Bluszits Logo" style="height: 65px;"> <!-- Ajusta la altura al 30% más grande -->
+            </a>
+            <ul>
+                <li><a href="/index.html">Inicio</a></li>
+                <li><a href="#">Sobre Nosotros</a></li>
+                <li><a href="/bluszitstorecenter.html">Contacto</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <header>
+        <div class="header-container">
+            <h1></h1>
+            <p></p>
+            <br><br><br><br><br><br><br><br><br><br><br><br>
+            <button id="publicar-servidor-btn" class="gamer-btn">Publicar servidor ahora</button>
+        </div>
+    </header>
+
+    <div id="form-container" class="hidden">
+        <h2>Hola usuario, nos alegra que quieras hacer parte del parnet de inversores Blutszits, por favor, completa la siguiente información</h2>
+        <form id="server-form" action="#">
+            <div class="step" id="step-1">
+                <label for="server-link">Link del servidor:</label>
+                <input type="url" id="server-link" name="server-link" placeholder="https://www.roblox.com/share?code=..." pattern="https://www\.roblox\.com/share\?code=[0-9a-f]{32}&type=Server" required>
+                <button type="button" class="next-btn gamer-btn">Siguiente</button>
+            </div>
+
+            <div class="step hidden" id="step-2">
+                <div id="optional-section">
+                    <label for="country">País:</label>
+                    <input type="text" id="country" name="country" required>
+
+                    <label for="bank-account">Cuenta bancaria:</label>
+                    <input type="text" id="bank-account" name="bank-account" required>
+                </div>
+
+                <div class="gamepass-option">
+                    <input type="checkbox" id="gamepass-checkbox">
+                    <label for="gamepass-checkbox">Quiero recibir mis ingresos vía Gamepass</label>
+                </div>
+
+                <div id="gamepass-section" class="hidden">
+                    <label for="roblox-username">Nombre de usuario de Roblox:</label>
+                    <input type="text" id="roblox-username" name="roblox-username">
+                </div>
+
+                <button type="button" class="back-btn gamer-btn">Atrás</button>
+                <button type="submit" class="gamer-btn">Publicar servidor</button>
+            </div>
+        </form>
+    </div>
+
+    <footer>
+        <div class="footer-container">
+            <p>&copy; 2024 Bluszits. Todos los derechos reservados.</p>
+            <ul>
+                <li><a href="#">Política de privacidad</a></li>
+                <li><a href="#">Términos y condiciones</a></li>
+            </ul>
+        </div>
+    </footer>
+
+    <script>
+        document.getElementById('publicar-servidor-btn').addEventListener('click', function() {
+            document.getElementById('form-container').classList.remove('hidden');
+            document.getElementById('step-1').classList.add('active');
+            window.scrollTo(0, document.body.scrollHeight);
+        });
+
+        document.querySelector('.next-btn').addEventListener('click', function() {
+            document.getElementById('step-1').classList.remove('active');
+            document.getElementById('step-2').classList.add('active');
+        });
+
+        document.querySelector('.back-btn').addEventListener('click', function() {
+            document.getElementById('step-2').classList.remove('active');
+            document.getElementById('step-1').classList.add('active');
+        });
+
+        document.getElementById('gamepass-checkbox').addEventListener('change', function() {
+            document.getElementById('gamepass-section').classList.toggle('hidden', !this.checked);
+        });
+
+        document.getElementById('server-form').addEventListener('submit', function(event) {
+            event.preventDefault();
+            alert('Servidor publicado exitosamente!');
+            // Aquí puedes agregar la lógica para procesar el formulario
+        });
+    </script>
+</body>
+</html>

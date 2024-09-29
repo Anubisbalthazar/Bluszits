@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Búsqueda de Servidores con IA</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
+    <style>
+        /* Estilos generales */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #18181B;
+            color: #fff;
+        }
+
+        /* Header Styles */
+        header {
+            background-color: #1f1f1f;
+            padding: 10px 15px; /* Reduce el padding para hacer el header más delgado */
+            display: flex;
+            align-items: center;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+            border-bottom: 2px solid #000000;
+            height: 60px; /* Altura más delgada */
+        }
+
+        .logo {
+            display: flex;
+            align-items: center; /* Alinea el logo y el texto verticalmente */
+        }
+
+        .logo img {
+    height: 200px; /* Ajusta el tamaño del logo */
+    margin-right: 10px; /* Espacio entre el logo y el nombre */
+    margin-top: 30px; /* Ajusta este valor para mover el logo hacia abajo */
+}
+
+
+        .search-bar {
+            display: flex;
+            flex: 1;
+            justify-content: center;
+            margin-left: 10px;
+        }
+
+        .search-bar input {
+            width: 50%;
+            padding: 10px;
+            border: none;
+            border-radius: 5px 0 0 5px;
+            outline: none;
+        }
+
+        .search-bar button {
+            padding: 10px 20px;
+            border: none;
+            background-color: #9146FF;
+            color: #fff;
+            cursor: pointer;
+            border-radius: 0 5px 5px 0;
+        }
+
+        .search-bar button:hover {
+            background-color: #772CE8;
+        }
+
+
+        /* Sección de servidores */
+        .server-section {
+            padding: 80px 20px 20px 20px;
+        }
+
+        .server-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); /* Más grandes */
+            gap: 20px;
+        }
+
+        /* Tarjetas de servidores estilo YouTube */
+        .server-card {
+            background-color: #232327;
+            border-radius: 10px;
+            padding: 0;
+            transition: transform 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .server-card:hover {
+            transform: scale(1.05);
+        }
+
+        .thumbnail img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover; /* Ajustar la imagen */
+        }
+
+        .progress-bar {
+            height: 5px;
+            background-color: #9146FF;
+            width: 0%;
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            transition: width 1s ease;
+        }
+
+        .server-card:hover .progress-bar {
+            width: 100%;
+        }
+
+        .server-card h3, .server-card p {
+            padding: 10px;
+        }
+
+        .server-card button {
+            padding: 10px;
+            margin: 10px;
+            background-color: #9146FF;
+            border: none;
+            color: white;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+
+        .server-card button:hover {
+            background-color: #772CE8;
+        }
+
+        /* Estilos para el anuncio de tipo YouTube */
+        .ad-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.8);
+            justify-content: center;
+            align-items: center;
+            z-index: 10000;
+        }
+
+        .ad-modal.active {
+            display: flex;
+        }
+
+/* Agranda el contenedor del anuncio en un 30% */
+.ad-content {
+    background-color: #fff;
+    padding: 0;
+    border-radius: 10px;
+    max-width: 1170px; /* Ajustado al tamaño deseado */
+    width: 100%;
+    position: relative;
+}
+
+/* Aumenta el tamaño del video en un 30% */
+.ad-content video {
+    width: 100%;
+    height: 650px; /* Ajustado al tamaño deseado */
+    border-radius: 10px;
+}
+
+/* Botón "Saltar anuncio" más pequeño y ubicado en la esquina inferior derecha dentro del video */
+.skip-ad {
+    position: absolute;
+    bottom: 20px; /* Espacio desde abajo */
+    right: 20px;  /* Espacio desde la derecha */
+    padding: 8px 16px; /* Tamaño reducido */
+    font-size: 14px; /* Letra más pequeña */
+    background-color: rgba(0, 0, 0, 0.7); /* Fondo oscuro semitransparente */
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    z-index: 10;
+    display: none; /* Se oculta inicialmente y aparece después de 5 segundos */
+}
+
+/* Asegurar que el botón "Saltar anuncio" aparezca encima del video */
+.ad-content {
+    position: relative;
+}
+
+
+
+        .skip-ad:hover {
+            background-color: rgba(0, 0, 0, 0.9);
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Cabecera con buscador -->
+    <header>
+        <div class="logo">
+            <img src="/Imagenes.png/Logo.bluszitis-morado.png" alt="Logo de la web">
+        </div>
+        <div class="search-bar">
+            <input type="text" id="searchInput" placeholder="Buscar servidores...">
+            <button id="searchBtn">Buscar</button>
+        </div>
+        <!-- Ícono para regresar a la página principal -->
+        <a href="/index.html"><button onclick="returnToHome()" style="background-color: #9146FF; color: #fff; padding: 10px; border: none; border-radius: 5px; cursor: pointer;">
+            <i class="fa-solid fa-right-to-bracket"></i>
+        </button></a>
+    </header>
+   
+   <!-- Sección de servidores -->
+<section class="server-section">
+    <div class="server-grid" id="serverList">
+        <!-- Aquí se mostrarán los servidores cargados dinámicamente -->
+        <div class="server-card">
+            <div class="thumbnail">
+                <img src="/Imagenes.png/Codigos-Los-campos-de-Batalla-mas-fuertes.png" alt="Servidor 1">
+                <div class="progress-bar"></div>
+            </div>
+            <h3>Los campos de batalla mas fuertes</h3>
+            <p><h2>Patrocinado por:</h2>Bluszits</p>
+            <button onclick="showAdAndJoinServer('https://www.roblox.com/share?code=925a5c7263ab484382f0dc4884aeb8c5&type=Server')">Unirse al servidor</button>
+        </div>
+        <div class="server-card">
+            <div class="thumbnail">
+                <img src="/Imagenes.png/Site-logo.webp" alt="Servidor 2">
+                <div class="progress-bar"></div>
+            </div>
+            <h3>Servidor 2</h3>
+            <p>Experiencia de juego con rol inmersivo y mucho más.</p>
+            <button onclick="showAdAndJoinServer('https://www.roblox.com/servers')">Unirse al servidor</button>
+        </div>
+       
+
+    <!-- Modal del anuncio tipo YouTube -->
+    <div class="ad-modal" id="adModal">
+        <div class="ad-content">
+            <video id="adVideo" autoplay>
+                <source src="/Videos/Y2meta.app-MAP Animation (COLOMBIA) - GeoLayers After Effects Plug-in.mp4" id="adSource" type="video/mp4">
+                Tu navegador no soporta la reproducción de videos.
+            </video>
+            <!-- Botón de saltar anuncio -->
+            <button class="skip-ad" id="skipAdBtn">Saltar anuncio</button>
+        </div>
+    </div>
+
+    <button id="skipAdBtn" style="display:none;">
+        Saltar anuncio <span id="countdownDisplay">1</span>
+    </button>
+    
+
+    <script>
+       document.addEventListener("DOMContentLoaded", () => {
+    const searchInput = document.getElementById("searchInput");
+    const searchBtn = document.getElementById("searchBtn");
+
+    // Lista de servidores simulada
+    const servers = [
+        { id: 1, name: "Servidor 1", description: "Servidor activo de aventuras y combates épicos." },
+        { id: 2, name: "Servidor 2", description: "Experiencia de juego con rol inmersivo y mucho más." },
+        { id: 3, name: "Servidor 3", description: "Un espacio perfecto para construir y crear." },
+        { id: 4, name: "Servidor 4", description: "Servidor con torneos y desafíos diarios." }
+    ];
+
+    // Función para simular IA recomendando servidores basados en el historial
+    function recommendServers(query) {
+        return servers.filter(server => server.name.toLowerCase().includes(query));
+    }
+
+    // Filtrar servidores al hacer clic en el botón de buscar
+    searchBtn.addEventListener("click", () => {
+        const query = searchInput.value.toLowerCase();
+        const filteredServers = recommendServers(query);
+        const serverList = document.getElementById("serverList");
+        serverList.innerHTML = ""; // Limpiar la lista actual
+
+        filteredServers.forEach(server => {
+            const serverCard = `
+                <div class="server-card">
+                    <div class="thumbnail">
+                        <img src="/Imagenes.png/Site-logo.webp" alt="${server.name}">
+                        <div class="progress-bar"></div>
+                    </div>
+                    <h3>${server.name}</h3>
+                    <p>${server.description}</p>
+                    <button onclick="showAdAndJoinServer('https://www.roblox.com/servers')">Unirse al servidor</button>
+                </div>
+            `;
+            serverList.innerHTML += serverCard;
+        });
+    });
+});
+
+// Lista de anuncios (URLs de videos)
+const adList = [
+    "/videos/Y2meta.app-SALVO (2017).mp4",
+    "/videos/Y2meta.app-Publicidad Monster Energy.mp4",
+    "/videos/Y2meta.app-No te calientes, tómate un Sprite.mp4",
+    "/videos/Y2meta.app-NESCAFÉ.mp4",
+    "/videos/Y2meta.app-CocaCola.mp4"
+];
+
+// Función para mostrar el anuncio y unirse al servidor
+function showAdAndJoinServer(serverLink) {
+    const adModal = document.getElementById("adModal");
+    const adVideo = document.getElementById("adVideo");
+    const skipAdBtn = document.getElementById("skipAdBtn");
+    const countdownDisplay = document.getElementById("countdownDisplay");
+
+    // Seleccionar un anuncio al azar
+    const randomAd = adList[Math.floor(Math.random() * adList.length)];
+    document.getElementById("adSource").src = randomAd;
+    adVideo.load(); // Recargar el video con el nuevo anuncio
+
+    // Mostrar el modal de anuncio
+    adModal.classList.add("active");
+
+    // Iniciar el contador
+    let count = 5; // Mostrar el botón "Saltar anuncio" después de 5 segundos
+    skipAdBtn.style.display = "none";
+    countdownDisplay.textContent = count;
+    
+    const countdownInterval = setInterval(() => {
+        count--;
+        countdownDisplay.textContent = count;
+        if (count <= 0) {
+            skipAdBtn.style.display = "block";
+            clearInterval(countdownInterval);
+        }
+    }, 1000);
+
+    // Pausar el video y cerrar el modal al hacer clic en "Saltar anuncio"
+    skipAdBtn.onclick = () => {
+        adModal.classList.remove("active");
+        adVideo.pause(); // Pausar el video al cerrar
+        window.location.href = serverLink; // Redirigir al servidor
+    };
+
+    // Cerrar el anuncio automáticamente cuando termine el video
+    adVideo.onended = () => {
+        adModal.classList.remove("active");
+        adVideo.pause(); // Asegurarse de que el video se pause
+        window.location.href = serverLink;
+    };
+}
+
+
+    </script>
+    
+    
+</body>
+</html>

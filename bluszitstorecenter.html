@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tienda Gamer - Atención al Cliente</title>
+    <style>
+        /* Global Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(to right, #1f1c2c, #928dab);
+            color: white;
+            overflow-x: hidden;
+        }
+
+        header {
+            background-color: #0b0b3b;
+            color: #ff4e50;
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
+        }
+
+        header h1 {
+            margin: 0;
+            font-size: 2.5rem;
+        }
+
+        header p {
+            font-size: 1rem;
+        }
+
+        nav ul {
+            list-style: none;
+            padding: 0;
+            margin-top: 10px;
+        }
+
+        nav ul li {
+            display: inline;
+            margin: 0 15px;
+        }
+
+        nav ul li a {
+            color: #ff4e50;
+            text-decoration: none;
+            font-size: 1.1rem;
+            font-weight: bold;
+        }
+
+        nav ul li a:hover {
+            color: #ff8080;
+        }
+
+        section {
+            padding: 30px;
+            margin: 20px auto;
+            background-color: rgba(15, 15, 35, 0.9);
+            max-width: 900px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.7);
+            border-radius: 10px;
+        }
+
+        section h2 {
+            color: #ff4e50;
+            text-shadow: 2px 2px 5px black;
+            margin-bottom: 20px;
+        }
+
+        section p {
+            font-size: 1.1rem;
+        }
+
+        ul {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        ul li {
+            padding: 10px 0;
+            border-bottom: 1px solid #555;
+        }
+
+        ul li strong {
+            color: #f9f871;
+        }
+
+        button {
+            background-color: #ff4e50;
+            color: white;
+            padding: 10px 30px;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            margin-top: 15px;
+            font-size: 1rem;
+            transition: background-color 0.3s;
+        }
+
+        button:hover {
+            background-color: #ff8080;
+        }
+
+        footer {
+            text-align: center;
+            padding: 20px;
+            background-color: #0b0b3b;
+            color: #ff4e50;
+            position: relative;
+            bottom: 0;
+            width: 100%;
+        }
+
+        a {
+            color: #ff8080;
+            text-decoration: underline;
+        }
+
+        a:hover {
+            color: #ff4e50;
+        }
+
+        /* Carousel Styles */
+        .carousel-container {
+            position: relative;
+            width: 100%;
+            max-width: 800px;
+            margin: 30px auto;
+            overflow: hidden;
+            border-radius: 10px;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.8);
+        }
+
+        .carousel {
+            display: flex;
+            transition: transform 0.4s ease;
+        }
+
+        .slide {
+            min-width: 100%;
+            transition: opacity 1s ease;
+            opacity: 0;
+        }
+
+        .slide.active {
+            opacity: 1;
+        }
+
+        .slide img {
+            width: 100%;
+            height: auto;
+            border-radius: 5px;
+        }
+
+        .prev, .next {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background-color: rgba(0, 0, 0, 0.5);
+            border: none;
+            color: #fff;
+            padding: 10px;
+            cursor: pointer;
+            font-size: 2rem;
+            border-radius: 50%;
+            transition: background-color 0.3s ease;
+        }
+
+        .prev {
+            left: 10px;
+        }
+
+        .next {
+            right: 10px;
+        }
+
+        .prev:hover, .next:hover {
+            background-color: #444;
+        }
+
+        .dots {
+            position: absolute;
+            bottom: 10px;
+            width: 100%;
+            text-align: center;
+        }
+
+        .dot {
+            display: inline-block;
+            width: 10px;
+            height: 10px;
+            margin: 0 5px;
+            background-color: rgba(255, 255, 255, 0.5);
+            border-radius: 50%;
+            cursor: pointer;
+        }
+
+        .dot.active {
+            background-color: #ff0000;
+        }
+
+        .dot:hover {
+            background-color: #ff4444;
+        }
+
+        /* Media Queries for responsive design */
+        @media (max-width: 768px) {
+            header h1 {
+                font-size: 2rem;
+            }
+
+            header p {
+                font-size: 0.9rem;
+            }
+
+            nav ul li {
+                margin: 0 10px;
+            }
+
+            section {
+                padding: 20px;
+                margin: 15px auto;
+                max-width: 95%;
+            }
+
+            button {
+                padding: 10px 20px;
+                font-size: 0.9rem;
+            }
+        }
+
+        
+    </style>
+</head>
+
+<body>
+    <header>
+        <h1>Blutszits Store</h1>
+        <p>Explora nuestros servicios y compra de acuerdo a nuestras <a href="#politicas">Políticas de Uso</a>.</p>
+        <nav>
+            <ul>
+                <li><a href="#compras">Problemas de Compra</a></li>
+                <li><a href="#ventas">Problemas de Venta</a></li>
+                <li><a href="#contacto">Líneas de Contacto</a></li>
+                <li><a href="#ayuda">Centro de Ayuda</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <section id="compras">
+        <h2>Solución a Problemas de Compra</h2>
+        <p>Si experimentas problemas al realizar una compra, sigue los pasos a continuación:</p>
+        <ul>
+            <li>Verifica que los datos de pago sean correctos.</li>
+            <li>Asegúrate de que tu tarjeta o método de pago tenga fondos suficientes.</li>
+            <li>Intenta recargar la página o utilizar otro navegador.</li>
+            <li>Verifica que quien te esté vendiendo la cuenta forma parte de nuestra plataforma y no es un estafador.</li>
+            <li>Contacta a tu banco si el problema persiste.</li>
+        </ul>
+    </section>
+
+
+    <section id="ventas">
+        <h2>Solución a Problemas de Venta</h2>
+        <p>Si tienes inconvenientes al vender productos o servicios en nuestra plataforma:</p>
+        <ul>
+            <li>Asegúrate de que los detalles del producto estén correctamente especificados.</li>
+            <li>Verifica las condiciones de tu cuenta de vendedor.</li>
+            <li>Revisa que los medios de pago asignados sean correctos y estén actualizados.</li>
+            <li>Si no puedes publicar tu producto, revisa nuestras políticas de uso.</li>
+        </ul>
+    </section>
+
+    <section id="contacto">
+        <h2>Líneas de Contacto</h2>
+        <p>Para asistencia directa, puedes comunicarte con nosotros a través de los siguientes canales:</p>
+        <ul>
+            <li><strong>Email:</strong> soporte@blutszits.com</li>
+            <li><strong>Teléfono:</strong> +1 800 555 5555</li>
+            <li><strong>Chat en vivo:</strong> Disponible en la esquina inferior derecha.</li>
+        </ul>
+        <button>Ir a chat en vivo</button>
+    </section>
+
+    <footer>
+        <p>&copy; 2024 Blutszits Store | <a href="#politicas">Políticas de Uso</a></p>
+    </footer>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const slides = document.querySelectorAll('.slide');
+            const dots = document.querySelectorAll('.dot');
+            const prevBtn = document.querySelector('.prev');
+            const nextBtn = document.querySelector('.next');
+            let currentSlide = 0;
+
+            function showSlide(index) {
+                slides.forEach((slide, i) => {
+                    slide.classList.remove('active');
+                    dots[i].classList.remove('active');
+                });
+                slides[index].classList.add('active');
+                dots[index].classList.add('active');
+            }
+
+            function nextSlide() {
+                currentSlide = (currentSlide + 1) % slides.length;
+                showSlide(currentSlide);
+            }
+
+            function prevSlide() {
+                currentSlide = (currentSlide - 1 + slides.length) % slides.length;
+                showSlide(currentSlide);
+            }
+
+            nextBtn.addEventListener('click', nextSlide);
+            prevBtn.addEventListener('click', prevSlide);
+
+            dots.forEach((dot, index) => {
+                dot.addEventListener('click', () => {
+                    currentSlide = index;
+                    showSlide(currentSlide);
+                });
+            });
+
+            setInterval(nextSlide, 5000);
+        });
+    </script>
+</body>
+
+</html>

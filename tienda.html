@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Blutszits Store - Tienda</title>
+
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+
+  <style>
+    /* (Todo el estilo anterior permanece igual) */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Arial', sans-serif;
+      background-color: #1d1f20;
+      padding: 20px;
+      color: #fff;
+    }
+
+    /* Encabezado de la tienda */
+    .header {
+      background-color: #0d1117;
+      padding: 15px 30px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-radius: 8px;
+      margin-bottom: 30px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+    }
+
+    .header-logo {
+      font-size: 32px;
+      font-weight: bold;
+      color: #ff4d4d;
+    }
+
+    .header-cart {
+      display: flex;
+      align-items: center;
+      cursor: pointer;
+    }
+
+    .header-cart i {
+      font-size: 28px;
+      color: #ff4d4d;
+    }
+
+    /* Sección de productos */
+    .products {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 20px;
+      padding: 10px;
+    }
+
+    .product-card {
+      background-color: #161b22;
+      border-radius: 25px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.7);
+      padding: 20px;
+      text-align: center;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .product-card:hover {
+      transform: translateY(-10px);
+      box-shadow: 0 8px 30px rgba(255, 77, 77, 0.8);
+    }
+
+    .product-card img {
+      width: 100%;
+      height: 300px;
+      object-fit: cover;
+      border-radius: 8px;
+      margin-bottom: 15px;
+    }
+
+    .product-name {
+      font-size: 20px;
+      font-weight: bold;
+      margin: 10px 0;
+      color: #ff4d4d;
+    }
+
+    .product-price {
+      font-size: 18px;
+      color: #00e676;
+      margin-bottom: 15px;
+    }
+
+    .action-icons {
+      display: flex;
+      justify-content: space-around;
+      margin-top: 10px;
+    }
+
+    .action-icons i {
+      font-size: 26px;
+      color: #ff4d4d;
+      cursor: pointer;
+      transition: color 0.3s ease;
+    }
+
+    .action-icons i:hover {
+      color: #e63939;
+    }
+
+    /* Carrito - Modal */
+    .cart-modal {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background-color: #0d1117;
+      width: 90%;
+      max-width: 500px;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.9);
+      display: none;
+      z-index: 1000;
+    }
+
+    .cart-modal.active {
+      display: block;
+    }
+
+    .cart-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 15px;
+      border-bottom: 1px solid #444;
+      padding-bottom: 10px;
+    }
+
+    .cart-item img {
+      width: 50px;
+      height: 50px;
+      object-fit: cover;
+      border-radius: 8px;
+      margin-right: 10px;
+    }
+
+    .cart-total {
+      font-size: 18px;
+      font-weight: bold;
+      margin-top: 20px;
+    }
+
+    .cart-buttons {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 20px;
+    }
+
+    .cart-buttons button {
+      background-color: #ff4d4d;
+      color: white;
+      padding: 10px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+      font-size: 16px;
+    }
+
+    .cart-buttons button:hover {
+      background-color: #e63939;
+    }
+
+    /* Overlay */
+    .overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.7);
+      display: none;
+      z-index: 999;
+    }
+
+    .overlay.active {
+      display: block;
+    }
+
+    /* Botón para regresar */
+    .back-btn {
+      background-color: #ff4d4d;
+      color: #fff;
+      padding: 12px 20px;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      display: block;
+      margin: 30px auto 0;
+      font-size: 18px;
+      transition: background-color 0.3s ease;
+    }
+
+    .back-btn:hover {
+      background-color: #e63939;
+    }
+
+    /* Mensaje de notificación */
+    .notification {
+      position: fixed;
+      top: 10px;
+      right: 10px;
+      background-color: #0d1117;
+      color: #fff;
+      padding: 10px 20px;
+      border-radius: 8px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+      opacity: 0;
+      transition: opacity 0.5s ease;
+      z-index: 2000;
+    }
+
+    .notification.show {
+      opacity: 1;
+    }
+
+    /* Modal de formulario de compra */
+    .form-modal {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background-color: #0d1117;
+      width: 90%;
+      max-width: 400px;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.9);
+      display: none;
+      z-index: 1000;
+    }
+
+    .form-modal.active {
+      display: block;
+    }
+
+    .form-modal label {
+      display: block;
+      margin-bottom: 8px;
+      color: #fff;
+    }
+
+    .form-modal input {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid #444;
+      border-radius: 5px;
+      margin-bottom: 15px;
+      background-color: #161b22;
+      color: #fff;
+    }
+
+    .form-modal button {
+      background-color: #ff4d4d;
+      color: white;
+      padding: 10px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+      font-size: 16px;
+      width: 100%;
+    }
+
+    .form-modal button:hover {
+      background-color: #e63939;
+    }
+  </style>
+</head>
+<body>
+  <!-- Encabezado -->
+  <div class="header">
+    <div class="header-logo">Blutszits Store</div>
+    
+    <div class="header-cart" onclick="toggleCart()">
+      <i class="fa-solid fa-cart-shopping"></i>
+    </div>
+  </div>
+
+  <!-- Sección de productos -->
+  <div class="products">
+    <div class="product-card">
+      <img src="/Imagenes.png/1.png" alt="Producto 1">
+      <div class="product-name">Producto 1</div>
+      <div class="product-price">$199.99</div>
+      <div class="action-icons">
+        <i class="fa-solid fa-cart-plus" onclick="addToCart('Producto 1', 199.99, 'https://via.placeholder.com/300')"></i>
+        <i class="fa-solid fa-money-bill-wave" onclick="showPurchaseForm('Producto 1', 199.99)"></i>
+        <i class="fa-solid fa-circle-info" onclick="viewDetails('Producto 1')"></i>
+      </div>
+    </div>
+
+    <div class="product-card">
+      <img src="/Imagenes.png/2.png" alt="Producto 2">
+      <div class="product-name">Producto 2</div>
+      <div class="product-price">$99.99</div>
+      <div class="action-icons">
+        <i class="fa-solid fa-cart-plus" onclick="addToCart('Producto 2', 99.99, 'https://via.placeholder.com/300')"></i>
+        <i class="fa-solid fa-money-bill-wave" onclick="showPurchaseForm('Producto 2', 99.99)"></i>
+        <i class="fa-solid fa-circle-info" onclick="viewDetails('Producto 2')"></i>
+      </div>
+    </div>
+
+    <div class="product-card">
+      <img src="/Imagenes.png/3.png" alt="Producto 3">
+      <div class="product-name">Producto 3</div>
+      <div class="product-price">$49.99</div>
+      <div class="action-icons">
+        <i class="fa-solid fa-cart-plus" onclick="addToCart('Producto 3', 49.99, 'https://via.placeholder.com/300')"></i>
+        <i class="fa-solid fa-money-bill-wave" onclick="showPurchaseForm('Producto 3', 49.99)"></i>
+        <i class="fa-solid fa-circle-info" onclick="viewDetails('Producto 3')"></i>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal del carrito -->
+  <div class="overlay" onclick="toggleCart()"></div>
+  <div class="cart-modal" id="cart-modal">
+    <h2>Carrito de Compras</h2>
+    <div id="cart-items"></div>
+    <div class="cart-total">Total: $<span id="cart-total">0.00</span></div>
+    <div class="cart-buttons">
+      <button onclick="checkout()">Pagar</button>
+      <button onclick="toggleCart()">Cerrar</button>
+    </div>
+  </div>
+
+  <!-- Modal del formulario de compra -->
+  <div class="overlay" onclick="togglePurchaseForm()"></div>
+  <div class="form-modal" id="form-modal">
+    <h2>Comprar Producto</h2>
+    <label for="user-name">Nombre</label>
+    <input type="text" id="user-name" required>
+    <label for="user-email">Correo Electrónico</label>
+    <input type="email" id="user-email" required>
+    <button id="purchase-button" onclick="buyProduct()">Comprar</button>
+  </div>
+
+  <!-- Notificación -->
+  <div class="notification" id="notification"></div>
+
+  <!-- Script -->
+  <script>
+    const cart = [];
+    let currentProduct = '';
+
+    function addToCart(name, price, image) {
+      cart.push({ name, price, image });
+      showNotification(`${name} añadido al carrito`);
+      updateCart();
+    }
+
+    function removeFromCart(index) {
+      cart.splice(index, 1);
+      updateCart();
+    }
+
+    function updateCart() {
+      const cartItems = document.getElementById('cart-items');
+      cartItems.innerHTML = '';
+      let total = 0;
+
+      cart.forEach((item, index) => {
+        cartItems.innerHTML += `
+          <div class="cart-item">
+            <img src="${item.image}" alt="${item.name}">
+            <div>${item.name}</div>
+            <div>$${item.price.toFixed(2)}</div>
+            <button onclick="removeFromCart(${index})">Eliminar</button>
+          </div>
+        `;
+        total += item.price;
+      });
+
+      document.getElementById('cart-total').innerText = total.toFixed(2);
+    }
+
+    function toggleCart() {
+      const modal = document.getElementById('cart-modal');
+      const overlay = document.querySelector('.overlay');
+      modal.classList.toggle('active');
+      overlay.classList.toggle('active');
+    }
+
+    function showPurchaseForm(name, price) {
+      currentProduct = name;
+      document.getElementById('form-modal').classList.add('active');
+      document.querySelector('.overlay').classList.add('active');
+    }
+
+    function togglePurchaseForm() {
+      const modal = document.getElementById('form-modal');
+      const overlay = document.querySelector('.overlay');
+      modal.classList.remove('active');
+      overlay.classList.remove('active');
+      document.getElementById('user-name').value = '';
+      document.getElementById('user-email').value = '';
+    }
+
+    function buyProduct() {
+      const name = document.getElementById('user-name').value;
+      const email = document.getElementById('user-email').value;
+      const message = `Hola! Soy: ${name} y quiero comprar el producto: ${currentProduct}`;
+      const url = `https://api.whatsapp.com/send?phone=+1234567890&text=${encodeURIComponent(message)}`;
+      
+      window.location.href = url;
+      togglePurchaseForm(); // Cerrar el formulario
+    }
+
+    function viewDetails(name) {
+      window.location.href = `detalles.html?producto=${name}`;
+    }
+
+    function showNotification(message) {
+      const notification = document.getElementById('notification');
+      notification.innerText = message;
+      notification.classList.add('show');
+
+      setTimeout(() => {
+        notification.classList.remove('show');
+      }, 3000);
+    }
+
+    function checkout() {
+      if (cart.length > 0) {
+        alert('Procesando el pago...');
+      } else {
+        alert('El carrito está vacío.');
+      }
+    }
+  </script>
+</body>
+</html>

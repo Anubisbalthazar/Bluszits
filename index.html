@@ -1,0 +1,703 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tu Página de Blox Fruits</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        /* General Styles */
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #121212;
+            color: #ffffff;
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        /* Header Styles */
+        header {
+            background-color: #1f1f1f;
+            padding: 10px 15px; /* Reduce el padding para hacer el header más delgado */
+            display: flex;
+            align-items: center;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+            border-bottom: 2px solid #e91e63;
+            height: 60px; /* Altura más delgada */
+        }
+
+        .logo {
+            display: flex;
+            align-items: center; /* Alinea el logo y el texto verticalmente */
+        }
+
+        .logo img {
+    height: 200px; /* Ajusta el tamaño del logo */
+    margin-right: 10px; /* Espacio entre el logo y el nombre */
+    margin-top: 30px; /* Ajusta este valor para mover el logo hacia abajo */
+}
+
+
+        
+
+        /* Main Content Styles */
+        .main-content {
+            display: flex; /* Usar flexbox para el contenido principal */
+            padding-top: 75px; /* Espacio para el header fijo */
+        }
+
+        /* Sidebar Styles */
+        .sidebar {
+            position: sticky; /* Permite que se mantenga fija al hacer scroll */
+            top: 95px; /* Espacio por encima igual al del header */
+            background-color: #2a2a2a;
+            border-radius: 8px;
+            padding: 15px;
+            width: 200px; 
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.3);
+            flex-shrink: 0; /* Evita que se encoja */
+            height: auto; /* Hace que el sidebar ocupe toda la altura de la pantalla */
+        }
+
+        .sidebar h3 {
+            margin: 0 0 10px;
+            color: #e91e63;
+        }
+
+        .sidebar a {
+            color: #ffffff;
+            text-decoration: none;
+            margin: 5px 0;
+            display: block;
+        }
+
+        .sidebar a:hover {
+            color: #068af7;
+        }
+
+        .sidebar p {
+            margin: 5px 0;
+            font-size: 14px;
+            color: #ffffff;
+        }
+
+        /* Feed Styles */
+        .feed {
+            flex: 1; /* Ocupa el espacio restante */
+            display: flex;
+            flex-direction: column;
+            align-items: center; /* Centrar las publicaciones */
+            gap: 15px; 
+            max-width: 600px; /* Limitar el ancho máximo del feed */
+            margin: 0 auto; /* Centramos el feed */
+        }
+
+        .feed-post {
+            background-color: #2b2b2b;
+            border-radius: 8px;
+            padding: 15px;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.3);
+            transition: transform 0.3s;
+            width: 100%; /* Asegurarse que ocupa todo el ancho posible */
+            max-width: 600px; /* Limitar el ancho máximo */
+        }
+
+        .feed-post:hover {
+            transform: scale(1.01);
+        }
+
+        .feed-header {
+            display: flex;
+            justify-content: space-between;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #e91e63;
+        }
+
+        .feed-header h2 {
+            margin: 0;
+            font-size: 18px;
+            color: #ffffff;
+        }
+
+        .feed-header p {
+            margin: 0;
+            font-size: 12px;
+            color: #999999;
+        }
+
+        .feed-content {
+            margin-top: 10px;
+        }
+
+        .feed-content p {
+            margin: 0 0 10px;
+            color: #ffffff;
+            font-size: 14px;
+        }
+
+        .feed-image {
+            width: 100%; 
+            border-radius: 8px;
+            margin: 10px 0;
+            display: block; 
+        }
+
+        /* Footer Navigation */
+        #bottom-nav {
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            background-color: #1f1f1f;
+            display: flex;
+            justify-content: space-around;
+            padding: 10px 0;
+        }
+
+        #bottom-nav i {
+            color: #ffffff;
+            font-size: 28px;
+        }
+
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.8);
+            justify-content: center;
+            align-items: center;
+            overflow: auto;
+        }
+
+        .modal-content {
+            background-color: #2a2a2a;
+            padding: 20px;
+            border-radius: 8px;
+            width: 90%;
+            max-width: 600px;
+            color: white;
+            box-shadow: 0px 10px 20px rgba(0, 0, 0, 0.5);
+        }
+
+        .modal-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background-color: #1f1f1f;
+            padding: 10px;
+            border-bottom: 2px solid #e91e63;
+            border-radius: 8px 8px 0 0;
+        }
+
+        .modal-header h1 {
+            margin: 0;
+            font-size: 24px;
+            font-weight: bold;
+        }
+
+        .close {
+            color: #ffffff;
+            font-size: 28px;
+            cursor: pointer;
+        }
+
+        .close:hover {
+            color: #e91e63;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .sidebar {
+                display: none; /* Ocultar barras laterales en dispositivos móviles */
+            }
+            .main-content {
+                flex-direction: column; /* Cambiar la dirección de la flex en móviles */
+                align-items: center; /* Centrar contenido */
+            }
+            .feed {
+                margin: 0; /* Quitar margen para centrado */
+            }
+        }
+
+      
+
+.config-icon {
+    position: absolute; /* Posiciona el icono de configuración de manera absoluta */
+    top: 25px; /* Ajusta el valor para moverlo verticalmente */
+    right: 40px; /* Ajusta el valor para moverlo horizontalmente */
+    color: white; /* Cambia el color del icono a blanco */
+    font-size: 30px; /* Aumenta el tamaño del icono */
+}
+
+.config-icon:hover {
+    color: #e91e63; /* Cambia el color al pasar el mouse sobre el icono */
+}
+
+.feed-content {
+    position: relative;
+}
+
+.custom-video {
+    width: 100%;
+    height: auto;
+    display: block;
+}
+
+.video-controls {
+    display: flex;
+    align-items: center;
+    background-color: rgba(0, 0, 0, 0.7);
+    padding: 10px;
+    border-radius: 5px;
+    margin-top: 5px;
+}
+
+.video-controls button {
+    color:#e91e63;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 5px 10px;
+    margin-right: 10px;
+    font-size: 16px;
+}
+
+.seek-bar {
+    flex: 1;
+    margin: 0 10px;
+}
+
+.feed-content button {
+    background: linear-gradient(45deg, #e4e6e9, #b1d60b);
+    border: none;
+    padding: 12px 24px;
+    color: white;
+    font-size: 16px;
+    font-weight: bold;
+    border-radius: 8px;
+    cursor: pointer;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    transition: background 0.3s ease, box-shadow 0.3s ease, transform 0.3s ease;
+}
+
+.feed-content button:hover {
+    background: linear-gradient(45deg, #2563eb, #e91e63);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+    transform: translateY(-2px);
+}
+
+.feed-content button:active {
+    transform: translateY(0);
+}
+
+p button {
+    background-color: #1059b9; /* Color verde atractivo */
+    border: none;
+    padding: 10px 20px;
+    color: white;
+    font-size: 14px;
+    font-weight: bold;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.3s ease;
+}
+
+p button:hover {
+    background-color: #96114f; /* Cambia a un tono más oscuro al hacer hover */
+    transform: translateY(-2px); /* Eleva el botón levemente */
+}
+
+p button:active {
+    transform: translateY(0); /* Vuelve a la posición original al hacer clic */
+}
+
+#loading {
+    text-align: center;
+    font-size: 18px;
+    margin-top: 20px;
+}
+
+
+
+
+
+
+    </style>
+</head>
+
+<body>
+    <header>
+        <div class="logo">
+            <img src="/Imagenes.png/Logo.bluszits-rosado.png" alt="Logo"> 
+        </div>
+        
+        <a href="/configuracion.html" class="config-icon"><i class="fas fa-cog" title="Configuración"></i></a>
+    </header>
+    
+    <br>
+
+    <div class="main-content">
+        <div class="sidebar">
+            <h2>Lo mas reciente</h2>
+            <a href="#">Nuevos articulos agregados en la tienda</a>
+            <h3>Nuevas funciones</h3>
+            <p>Hemos agregado nueva funcion de farmeo para los jugadores de blox fruit, y tambien hemos agregado nuevas funciones en las configuraciones.
+                Ve y revisalas! <a href=""><button>Ir ahora</button></a>
+            </p>
+            <h3>Nuevos servidores</h3>
+            <a href="#">Hemos agregado servidores privados de diferentes juegos de ROBLOX</a>
+            <br>
+            <h3>Genera ingresos</h3>
+            <a href="/index.movil.html">Genera ingreso, facil, rapido y seguro prestando tus servidores privados de ROBLOX de cualquier juego</a>
+            <br>
+            <h3>Información Adicional</h3>
+            <p>Nuevas normas y politicas de uso agegadas, ve y revisalas para que no te pierdas de nuestras novedades!</p>
+            <p>Centro de ayuda optimizado para dar mejor soporte a los usaruios</p>
+            <br>
+            <h3>Bluszits Store</h3>
+            <p>En la tienda de Bluszits, no solo puedes comprar cuentas, si no, frutas de Blox fruit, mascotas de adot me, gamepass de cualquier juego y mucho mas.
+                Explora la tienda y compra lo que mas te guste!
+            </p>
+        </div>
+        <!--Aqui van las publicaciones-->
+        <div class="feed">
+            <div class="feed-post">
+                <div class="feed-header">
+                    <h2>Bluszits Servers</h2>
+                    <p>AnubisB.</p>
+                </div>
+                <div class="feed-content">
+                    <img src="/Imagenes.png/Yellow Modern Common Money Mistakes YouTube Thumbnail (1).png" alt="Descripción de la imagen" class="feed-image">
+                    <p>¿Sabias que puedes generar ingresos a traves de Bluszits Serves?</p>
+                    <h3>Mira la barra lateral izquierda para obtener informacion mas detallada</h3>
+                </div>
+
+                
+            </div>
+
+            <div class="feed-post">
+                <div class="feed-header">
+                    <h2>Bluszits Store</h2>
+                    <p>AnubisB.</p>
+                </div>
+                <div class="feed-content">
+                    <img src="/Imagenes.png/Blue Purple Neon Online Store Instagram Post.png" alt="Descripción de la imagen" class="feed-image">
+                    <p>Nuevos articulos integrados en la tienda, ve y Explora de una gran variedad de productos!</p>
+                </div>
+
+                
+
+
+
+            </div>
+
+            <!-- Aqui van las publicaciones -->
+<div class="feed">
+    <div class="feed-post">
+        <div class="feed-header">
+            <h2>Vanessa_rr2_</h2>
+            <p>Vanessitaqm</p>
+        </div>
+        <div id="loading" style="display: none;"></div>
+        
+        <div class="feed-content">
+            <img src="/Imagenes.png/White And Pink Minimalist Cake Customer Testimonial Review Instagram Post.png" alt="Descripción de la imagen" class="feed-image">
+            <h3>5 razones por las que amo a Bluszits</h3>
+        </div>
+    </div>
+    <div class="feed-post">
+        <div class="feed-header">
+            <h2>Bluszits Store</h2>
+            <p>AnubisB.</p>
+        </div>
+        <div class="feed-content">
+            <video src="/Videos/publicacion.mp4" class="custom-video" id="video1" oncontextmenu="return false;"></video>
+            <div class="video-controls">
+                <button class="play-pause" id="playPauseButton">Play</button>
+                <button class="mute" id="muteButton">Mute</button>
+                <input type="range" class="seek-bar" id="seekBar" value="0" max="100">
+            </div>
+            <br><br><br>
+            <h3>Realiza tu primera compra en la tienda y llevate una fruta permanente contigo</h3>
+            <p>Puedes ir a revisar la tienda en cualquier momento</p>
+            <a href="/tienda.html"><button>Ir a la tienda</button></a>
+        </div>
+    </div>
+    
+    <div class="feed-post">
+        <div class="feed-header">
+            <h2>Bluszits Updates</h2>
+            <p>AnubisB.</p>
+        </div>
+        <div class="feed-content">
+            <img src="/Imagenes.png/Nueva funcion.png" alt="Descripción de la imagen" class="feed-image">
+            <h1>¡Nuevas funciones están disponibles! Descubre lo que hemos mejorado.</h1>
+            <p>Hemos agregado nuevas funciones muy interesasnte para los amantes de videojuegos de ROBLOX, puedes ir a explorarlas
+                haciendo clic en el boton que esta aqui abajo 👇 
+            </p>
+            <a href=""><button>Ir a explorar</button></a>
+        </div>
+    </div>
+
+    <div class="feed-post">
+        <div class="feed-header">
+            <h2>Bluszits Events</h2>
+            <p>AnubisB.</p>
+        </div>
+        <div class="feed-content">
+            <img src="/Imagenes.png/Upcoming Event.png" alt="Descripción de la imagen" class="feed-image">
+            <p>No te pierdas nuestro próximo evento en línea. ¡Regístrate ya!</p>
+        </div>
+    </div>
+
+    <div class="feed-post">
+        <div class="feed-header">
+            <h2>Bluszits Community</h2>
+            <p>AnubisB.</p>
+        </div>
+        <div class="feed-content">
+            <img src="/Imagenes.png/Community Feedback.png" alt="Descripción de la imagen" class="feed-image">
+            <p>Queremos saber tu opinión sobre nuestra comunidad. ¡Déjanos un comentario!</p>
+        </div>
+    </div>
+
+    <div class="feed-post">
+        <div class="feed-header">
+            <h2>Bluszits Merchandise</h2>
+            <p>AnubisB.</p>
+        </div>
+        <div class="feed-content">
+            <img src="/Imagenes.png/Merch Launch.png" alt="Descripción de la imagen" class="feed-image">
+            <p>¡Ya están aquí los nuevos artículos de Bluszits! No te los pierdas.</p>
+        </div>
+    </div>
+
+    <div class="feed-post">
+        <div class="feed-header">
+            <h2>Bluszits Collaborations</h2>
+            <p>AnubisB.</p>
+        </div>
+        <div class="feed-content">
+            <img src="/Imagenes.png/Collaboration Post.png" alt="Descripción de la imagen" class="feed-image">
+            <p>Colaboramos con otros creadores para traerte contenido increíble. ¡Mira esto!</p>
+        </div>
+    </div>
+
+    <div class="feed-post">
+        <div class="feed-header">
+            <h2>Bluszits Reviews</h2>
+            <p>AnubisB.</p>
+        </div>
+        <div class="feed-content">
+            <img src="/Imagenes.png/Reviews Collection.png" alt="Descripción de la imagen" class="feed-image">
+            <p>Vea lo que nuestros usuarios piensan de Bluszits en las reseñas recientes.</p>
+        </div>
+    </div>
+
+    <div class="feed-post">
+        <div class="feed-header">
+            <h2>Bluszits Tips</h2>
+            <p>AnubisB.</p>
+        </div>
+        <div class="feed-content">
+            <img src="/Imagenes.png/Tips for Success.png" alt="Descripción de la imagen" class="feed-image">
+            <p>Consejos útiles para maximizar tu experiencia en Bluszits.</p>
+        </div>
+    </div>
+
+    <div class="feed-post">
+        <div class="feed-header">
+            <h2>Bluszits Announcements</h2>
+            <p>AnubisB.</p>
+        </div>
+        <div class="feed-content">
+            <img src="/Imagenes.png/Important Announcement.png" alt="Descripción de la imagen" class="feed-image">
+            <p>No olvides revisar nuestros anuncios importantes para la comunidad.</p>
+        </div>
+    </div>
+</div>
+
+
+            
+
+           
+        </div><br><br><br><br><br><br>
+        <br>
+        <br>
+        <br>
+
+        <div class="sidebar">
+            <h2>Consejos Útiles</h2>
+            <p><h3>Precausiones</h3> Mantente siempre actualizado con las normas y politicas de uso de la pagina</p>
+            <br>
+            <p><h3>Antes de compartir tu informacion</h3> Asegurate siempre de verificar que con quien hablas, sea una persona verificada por Bluszits, los numeros de atencion al cliente estan en el articulo 27 de las normas y politica de Bluszits Store, puedes ir y revisarlos antes de empezar una converzacion haciendo <a href="#">clic en este enlace</a></p>
+            <br>
+            <p><h3>Explora siempre el FEED!</h3>Puedes encontrar cupones de descuentos en el Feed</p>
+            <br>
+            <p><h3>Nuevas funciones agregadas</h3>Si deseas farmear tu cuenta con Bluszits, tienes que saber que nosotros nunca pedimos informacion mas alla de tu cuenta</p>
+        </div>
+    </div>
+    <br><br><br><br><br><br><br><br><br><br>
+
+    <footer id="bottom-nav">
+        <a href="/index.html"><i class="fas fa-home" title="Inicio"></i></a>
+        <a href="/tienda.html"><i class="fa-solid fa-store"></i></a>
+        <a id="menu-button" href="javascript:void(0)"><i class="fas fa-info-circle" title="Info"></i></a>
+        <a href="/Servidores.bluszits.html"><i class="fa-solid fa-server"></i></a>
+       
+    </footer>
+
+    <!-- Modal -->
+    <div id="myModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1>¡Bienvenido a Bluszits!</h1>
+                <span class="close">&times;</span>
+            </div>
+            <p>¿Sabias que en nuestro centro de informacion, tenemos detalles sobre cualquier problema que presentes,
+                chat en tiempo real y mucho mas?
+
+                Si necesitas informacion sobre alguno de nuestor servicios, <a href="/informacion.html">Puedes ingresar a este enlace</a> para encontrar informacion mas detalla
+            </p>
+        </div>
+    </div>
+
+    <script>
+        var modal = document.getElementById("myModal");
+        var btn = document.getElementById("menu-button");
+        var span = document.getElementsByClassName("close")[0];
+
+        btn.onclick = function() {
+            modal.style.display = "flex";
+        }
+
+        span.onclick = function() {
+            modal.style.display = "none";
+        }
+
+        window.onclick = function(event) {
+            if (event.target == modal) {
+                modal.style.display = "none";
+            }
+        }
+
+        
+        
+    const video = document.getElementById('video1');
+    const playPauseButton = document.getElementById('playPauseButton');
+    const muteButton = document.getElementById('muteButton');
+    const seekBar = document.getElementById('seekBar');
+
+    playPauseButton.addEventListener('click', () => {
+        if (video.paused) {
+            video.play();
+            playPauseButton.innerText = 'Pause';
+        } else {
+            video.pause();
+            playPauseButton.innerText = 'Play';
+        }
+    });
+
+    muteButton.addEventListener('click', () => {
+        video.muted = !video.muted;
+        muteButton.innerText = video.muted ? 'Unmute' : 'Mute';
+    });
+
+    video.addEventListener('timeupdate', () => {
+        const percentage = (video.currentTime / video.duration) * 100;
+        seekBar.value = percentage;
+    });
+
+    seekBar.addEventListener('input', () => {
+        const newTime = (seekBar.value * video.duration) / 100;
+        video.currentTime = newTime;
+    });
+
+    let lastScrollTop = 0;
+
+    window.addEventListener('scroll', function() {
+        const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+        video.pause();
+        lastScrollTop = scrollTop <= 0 ? 0 : scrollTop; // For Mobile or negative scrolling
+    });
+
+    // Implementar la funcionalidad de velocidad
+    let speedInterval;
+
+    video.addEventListener('mousedown', (e) => {
+        const videoWidth = video.clientWidth;
+        const clickPosition = e.clientX - video.getBoundingClientRect().left;
+        
+        // Verifica si el clic fue en la mitad derecha del video
+        if (clickPosition > videoWidth / 2) {
+            video.playbackRate = 2.0; // Cambia la velocidad a 2x
+        }
+
+        // Comienza a escuchar el movimiento del ratón
+        speedInterval = setInterval(() => {
+            video.playbackRate = 2.0; // Mantiene la velocidad
+        }, 100);
+    });
+
+    video.addEventListener('mouseup', () => {
+        clearInterval(speedInterval);
+        video.playbackRate = 1.0; // Restablece la velocidad
+    });
+
+    video.addEventListener('mouseleave', () => {
+        clearInterval(speedInterval);
+        video.playbackRate = 1.0; // Restablece la velocidad
+    });
+
+    let currentPage = 1;  // Página actual que se está mostrando
+const feedContainer = document.getElementById('feed');
+const loading = document.getElementById('loading');
+let isLoading = false;  // Para prevenir llamadas múltiples
+
+// Función para simular la carga de más publicaciones
+async function loadMorePosts(page) {
+    isLoading = true;
+    loading.style.display = 'block';
+
+    // Simulamos una llamada a un servidor para obtener más publicaciones
+    setTimeout(() => {
+        // Aquí podrías usar fetch para traer contenido real de un servidor
+        for (let i = 0; i < 5; i++) {  // Simulamos agregar 5 nuevas publicaciones
+            const post = document.createElement('div');
+            post.className = 'post';
+            post.innerHTML = `<h3>Publicación ${page * 5 + i + 1}</h3><p>Contenido de la publicación...</p>`;
+            feedContainer.appendChild(post);
+        }
+
+        loading.style.display = 'none';
+        isLoading = false;
+    }, 1000);  // Simulamos una espera de 1 segundo
+}
+
+// Detectamos el final del scroll
+window.addEventListener('scroll', () => {
+    if (window.innerHeight + window.scrollY >= document.body.offsetHeight - 100 && !isLoading) {
+        // Cargar más publicaciones si llegamos al final del scroll
+        currentPage++;
+        loadMorePosts(currentPage);
+    }
+});
+
+// Cargamos la primera página cuando cargue la página
+document.addEventListener('DOMContentLoaded', () => {
+    loadMorePosts(currentPage);
+});
+
+
+
+
+    </script>
+</body>
+</html>
